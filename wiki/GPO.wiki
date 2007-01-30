@@ -15,4 +15,4 @@ Note that GPO does not handle file I/O or any other application-specific messy d
 
 == Documentation ==
 
-Yes, some documentation would be nice! For now here are some random notes that will eventually be organized into a user's manual.
+Yes, some documentation would be nice! For now here are some RandomNotes  that will eventually be organized into a user's manual.
