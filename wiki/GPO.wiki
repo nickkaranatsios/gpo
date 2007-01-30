@@ -1,12 +1,12 @@
 = Google Pose Optimizer =
 
-Add your content here.
+The Google pose optimizer (GPO) allows reconstruction of the pose of a sensor platform (i.e. its position and orientation) based on information from sensors such as GPS, accelerometers and rate gyroscopes.
 
+The traditional way to solve this problem is to use a Kalman filter, which will give you the  pose in real time. GPO uses an off-line optimization approach pioneered by James Diebel at Stanford ([http://ai.stanford.edu/~diebel/smoother.html His software is here]). The advantage of off-line optimization is that smoother and more accurate results are produced.
 
-= Details =
-
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
-
+GPO had a sensor plugin architecture that allows new sensor models to be easily incorporated in to the optimization. The sensor models currently supported are:
+  * GPS position and doppler velocity.
+  * Accelerometers.
+  * Rate gyroscopes.
+  * Wheel encoders.
+  * Simple road constraint models.
