@@ -1,0 +1,83 @@
+
+TODO
+----
+
+Rationalize the API:
+	* Minimize the number of arguments in the constructors.
+	* Set and get methods for most parameters.
+	* No arbitrary constants (unless they are defaults that can be changed).
+	* Deal with sensor::data array ownership issues - the sensor objects probably
+	  shouldn't deallocate things.
+	* Remove usage of Vector3_d, Matrix3x3_d, e.g. so that rotation code can
+	  be templatized.
+
+In HessianMatrix::Initialize(): Having allocated the memory, linux doesn't
+actually guarantee that it's all available to be mapped into the process
+(see 'man malloc'). This "optimistic" allocation strategy is a bad thing
+in this case because we may allocate almost all of free memory and we need to
+make sure that it's really available to the process's address space.
+The memset()s to zero the matrix will segfault if there's not actually enough
+virtual memory available.
+
+If HessianMatrix::Add() becomes a bottleneck then we could have an AddRow()
+function or something similar. Maybe we could specify block numbers directly,
+which would eliminate some arithmetic. Do profiling before making this change!
+
+When iterating over sensor compute functions, each function iterates over
+the whole state vector. This means that there are many passes over the
+state vector, which means we have poor locality of reference. Perhaps we
+can organize things so we only do a single pass?
+	--> yes, if Sensor::ComputeDifferential moved to optimizer
+
+Test GPS, GPS vel, wheel, road and axel constraints with sparser sampling.
+
+The wheel encoder sensor is very similar to the axel, except in the axel
+the 'smallness' vector is fixed to 1. Perhaps generalize the wheel encoder
+to include axel.
+
+When estimating accelerometer and rate gyro noise from stationary measurements,
+looking at the distribution of that signal is misleading as it measures a
+strong vibrational component inside the IMU itself (the dithering motor on the
+rate gyro?). Instead get the noise parameters by looking at either the specs,
+the drift over time (e.g. one minute) or visually (make the reconstructed pose
+look nice).
+
+Compute a coarse solution first with e.g. 10x undersampled inertial data, then
+use that as the starting point for the fine solution to improve convergence.
+
+fast_block.cc should be built with -O1
+
+For testing, make sure we test the case where the measurement data is nonzero.
+
+
+DONE
+----
+
+Remove ugly sensor macros.
+
+The common computations for the GPS, accelerometer and rate gyro sensors are
+single points of failure. Try to exercise this in unit tests.
+
+The bias stuff for the accelerometer and rate gyro is virtually identical,
+should we unify them? (e.g. as a new sensor type). We would have to allow
+sharing of "private" extra state variables - a "global" registry perhaps?
+
+In LM, we should detect when the Hessian factor/solve is unsuccessful
+(e.g. too near singular) and discard the solution, increasing lambda to
+move the Hessian away from singular. But the solution is likely to be worse
+anyway (as long as there are no Infs or Nans), so this will happen
+automatically. And if the solution is better, fine! So the bottom line is
+we should be robust to Infs and Nans but don't change the existing logic.
+
+Estimate gravity and spin from data, when wheel encoders indicate that
+we're at a full stop? BUT, we may get better data from an earth model,
+especially for the spin vector (using lattitude and WGS-84 model).
+
+Make sure spin accounted for in rate gyro sensor.
+
+Make sure all 'new double[]' statements result in 8-byte aligned memory!
+
+The GPS velocity sensor assumes that the velocity measurement is an
+instantaneous measurement of velocity at the sample time - but is it really?
+	--> There's a time lag for the Novatel GPS, but other than that the
+	    model is okay.
