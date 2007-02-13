@@ -4,7 +4,7 @@ The Google pose optimizer (GPO) is a C++ library that allows reconstruction of t
 
 The traditional way to solve this problem is to use a Kalman filter, which will give you the  pose in real time. GPO uses an off-line optimization approach pioneered by James Diebel at Stanford ([http://ai.stanford.edu/~diebel/smoother.html His software is here]). The advantage of off-line optimization is that smoother and more accurate results are produced. The optimization problem is to take noisy sensor data over time and compute the pose at each time step that is most likely to have produced those measurements.
 
-GPO had a sensor plugin architecture that allows new sensor models to be easily incorporated in to the optimization. The sensor models currently supported are:
+GPO has a sensor plugin architecture that allows new sensor models to be easily incorporated in to the optimization. The sensor models currently supported are:
   * GPS position and doppler velocity.
   * Accelerometers.
   * Rate gyroscopes.
