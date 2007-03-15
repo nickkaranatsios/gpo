@@ -115,7 +115,7 @@ class Sensor {
   // locality of reference in writes to the big Hessian matrix from many
   // sensors.
   double ComputeDifferential(StateInfo &state, double *gradient,
-    HessianMatrix *H, int block=0, int total_blocks=1);
+    HessianMatrix *H, int block = 0, int total_blocks = 1);
 
   // State vector information functions. Note that these can ONLY be called from
   // the Compute*() functions, as they only return valid data during

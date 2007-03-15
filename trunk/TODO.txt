@@ -49,6 +49,9 @@ fast_block.cc should be built with -O1
 
 For testing, make sure we test the case where the measurement data is nonzero.
 
+Take away separate accelerometer and rate gyro code, just leave the inertial
+sensor.
+
 
 DONE
 ----

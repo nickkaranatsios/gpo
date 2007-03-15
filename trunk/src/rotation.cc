@@ -23,11 +23,10 @@ namespace GPO {
 //***************************************************************************
 // Utility
 
-// Return sin(x)/x. This has a singularity at 0 so special handling is needed
-// for small arguments.
-
 namespace {
 
+// Return sin(x)/x. This has a singularity at 0 so special handling is needed
+// for small arguments.
 inline double sinc(double x)
 {
   // If |x| < 1e-4 then use a taylor series expansion. This two term expansion
@@ -37,6 +36,17 @@ inline double sinc(double x)
     return 1.0 - x*x*0.166666666666666666667;
   } else {
     return sin(x)/x;
+  }
+}
+
+// Return asin(x)/x. This has a singularity at 0 so special handling is needed
+// for small arguments.
+inline double asinc(double x) {
+  if (fabs(x) < 1e-3) {
+    double x2 = x*x;
+    return 1 + x2*(1.0/6.0 + (3.0/40.0)*x2);
+  } else {
+    return asin(x)/x;
   }
 }
 
@@ -233,15 +243,14 @@ void WtoQ(const Vector3_d &w, Quaternion_d &q) {
 
 void QtoW(const Quaternion_d &q, Vector3_d &w) {
   double k;
-  double sin_a2 = sqrt(q[1]*q[1] + q[2]*q[2] + q[3]*q[3]);
+  double len = sqrt(q[1]*q[1] + q[2]*q[2] + q[3]*q[3]);
+  k = 2.0 * asinc(len);
+
   // Quaternions have double cover on the space of rotations (q and -q give
   // the same rotation), so make sure that we use the q or -q that gives
   // rotation angles in the range -pi..pi.
-  if (q[0] < 0) {
-    k = 2 * atan2(-sin_a2, -q[0]) / sin_a2;
-  } else {
-    k = 2 * atan2(sin_a2, q[0]) / sin_a2;
-  }
+  if (q[0] < 0) k = -k;
+
   w[0] = q[1]*k;
   w[1] = q[2]*k;
   w[2] = q[3]*k;
@@ -260,13 +269,13 @@ void WtoR(const Vector3_d &w, Matrix3x3_d &R) {
 
 void RtoW(const Matrix3x3_d &R, Vector3_d &w) {
   // The following approach works almost everywhere, but fails near the
-  // singularities at 'a=N*pi' :
+  // singularities at angle = N*pi :
   //
   //    double trace = R[0] + R[4] + R[8];
-  //    double a = acos((trace-1.0)*0.5);
-  //    double k = 0.5/sinc(a);
+  //    double angle = acos((trace-1.0)*0.5);
+  //    double k = 0.5/sinc(angle);
   //    w[0] = (R[7]-R[5])*k;
-  //    w[1] = (R[2]-R[6])*k;
+  //    w[1] = (R[2]-R[6])*k;syms
   //    w[2] = (R[3]-R[1])*k;
 
   // Instead we use a more robust approach: convert R into a quaternion
