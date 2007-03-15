@@ -272,12 +272,12 @@ int main(int argc, char **argv) {
   /*
    * Find or create the offsetof() macro.
    */
-  fprintf(file, "\n// The offsetof() macro \n#define GPO_OFFSETOF(type,member) ");
+  fprintf(file, "\n// The offsetof() macro\n#define GPO_OFFSETOF(type, member) ");
   if (compiles_and_runs("struct A { int a,b; }; int main() { return offsetof(A,b); }\n", 0)) {
     fprintf(file, "offsetof(type,member)\n");
   } else {
     if (compiles_and_runs("struct A { int a,b; }; int main() { return __builtin_offsetof(A,b); }\n", 0)) {
-      fprintf(file, "__builtin_offsetof(type,member)\n");
+      fprintf(file, "__builtin_offsetof(type, member)\n");
     } else {
       fprintf(file, "((int)(&(((type*)0)->member)))\n");
     }

@@ -95,14 +95,21 @@ void RateGyroSensor::ComputeErrorVector(int i, const Number *prev_step,
   //@@@TODO: Should we use rotation matrix half way between R1 and R2 in
   //         some places?
 
-  // Roll rotation vector is the middle column of R1 (or R2).
-  // Pitch rotation vector is (cos(yaw),-sin(yaw),0) (global).
-  // Yaw rotation vector is (0,0,1) (global).
+  // The transformation corresponding to this measurement is between the
+  // previous time step and this time step.
+  //
+  // For roll, pitch and yaw defined by deltas in the euler angles, we have:
+  //   * roll rotation vector is the middle column of R1 (or R2).
+  //   * pitch rotation vector is (cos(yaw),-sin(yaw),0) (global).
+  //   * yaw rotation vector is (0,0,-1) (global).
 
+  // Compute R1, the orientation at the previous timestep.
   Number R1[9];
   eulerR(prev_step + STATE_E1, R1);
 
-  Number delta[3];      // Deltas: pitch[0], roll[1] and yaw[2]
+  // Compute the change in pitch[0], roll[1] and yaw[2] between the previous
+  // and current time steps. Adjust for discontinuities.
+  Number delta[3];
   delta[0] = this_step[STATE_E1+0] - prev_step[STATE_E1+0];
   delta[1] = this_step[STATE_E1+1] - prev_step[STATE_E1+1];
   delta[2] = this_step[STATE_E1+2] - prev_step[STATE_E1+2];
@@ -114,17 +121,23 @@ void RateGyroSensor::ComputeErrorVector(int i, const Number *prev_step,
       delta[j] += 2.0 * M_PI;
     }
   }
+  
+  // Compute synthetic rate gyro measurements.
   Number average_yaw = (prev_step[STATE_E1+2] + this_step[STATE_E1+2]) * 0.5;
-  Number pitch_x = cos(average_yaw);
-  Number pitch_y = -sin(average_yaw);
-
-  Number px = pitch_x * delta[0];
-  Number py = pitch_y * delta[0];
+  Number pitch_x = cos(average_yaw);    // X component of pitch vector
+  Number pitch_y = -sin(average_yaw);   // Y component of pitch vector
+  Number px = pitch_x * delta[0];       // (px,py,0) is rotation vector for
+  Number py = pitch_y * delta[0];       //   change in pitch.
+  // Map pitch rotation vector to the three gyros as R' * [px;py;0].
+  // Map roll rotation vector to the three gyros as R' * R(:,2)*delta[1].
+  // Map yaw rotation vector to the three gyros as R' * [0;0;-1]*delta[2].
   error[0] = px*R1[0] + py*R1[3] - R1[6]*delta[2];
   error[1] = px*R1[1] + py*R1[4] - R1[7]*delta[2] + delta[1];
   error[2] = px*R1[2] + py*R1[5] - R1[8]*delta[2];
   FAST_MULTIPLY1_331(error, += , R1, spin_);
 
+  // Compute difference between current estimated and actual rates, and adjust
+  // for standard deviations.
   error[0] -= samples_[i].rx;
   error[1] -= samples_[i].ry;
   error[2] -= samples_[i].rz;

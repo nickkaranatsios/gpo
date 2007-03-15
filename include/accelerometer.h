@@ -25,7 +25,7 @@
 namespace GPO {
 
 // Model of a 3-axis accelerometer that produces one reading per time step.
-// This also models the accelerometer bias drift.
+// This sensor also models the accelerometer bias drift.
 
 class AccelerometerSensor : public Sensor {
  public:
@@ -39,7 +39,6 @@ class AccelerometerSensor : public Sensor {
   // allocated on the heap. The samples[i] entry corresponds to time step i.
   // The first entry of this array is ignored.
   // This object takes ownership of the array and will delete it when destroyed.
-  // C is the sensor noise standard deviation.
   // D is the drifting bias *per-step* noise standard deviation.
   AccelerometerSensor(int num_samples, Data *samples, double stepsize,
                       double D);

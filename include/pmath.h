@@ -17,8 +17,8 @@
 /*
 
 INTERNAL macros to manipulate small matrices and vectors. In particular we care
-about the following operations (the notation here is that 'a' is a small 3x1
-vector and 'A' is a small 3x3 matrix).
+about the following operations (the notation here is that 'a' is a 3x1 vector
+and 'A' is a 3x3 matrix).
 
         k = a dot b                -- Dot product
         k = a cross b              -- Cross product

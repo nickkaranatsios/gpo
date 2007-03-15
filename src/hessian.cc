@@ -113,7 +113,7 @@ const char *fp_error_message = 0;
 
 void fpe_signal_handler(int signum, siginfo_t *info, void *context) {
   DCHECK(insolve);
-  switch(info->si_code) {
+  switch (info->si_code) {
     case FPE_INTDIV:
       fp_error_message = "FP error: Integer divide by zero";
       break;
