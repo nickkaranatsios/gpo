@@ -37,7 +37,6 @@ class RateGyroSensor : public Sensor {
   // Create the sensor with the given measurements array, which must be
   // allocated on the heap. The samples[i] entry corresponds to time step i.
   // The first entry of this array is ignored.
-  // This object takes ownership of the array and will delete it when destroyed.
   // D is the drifting bias *per-step* noise standard deviation.
   RateGyroSensor(int num_samples, Data *samples, double stepsize,
                  double D);

@@ -6,8 +6,6 @@ Rationalize the API:
 	* Minimize the number of arguments in the constructors.
 	* Set and get methods for most parameters.
 	* No arbitrary constants (unless they are defaults that can be changed).
-	* Deal with sensor::data array ownership issues - the sensor objects probably
-	  shouldn't deallocate things.
 	* Remove usage of Vector3_d, Matrix3x3_d, e.g. so that rotation code can
 	  be templatized.
 
@@ -84,3 +82,6 @@ The GPS velocity sensor assumes that the velocity measurement is an
 instantaneous measurement of velocity at the sample time - but is it really?
 	--> There's a time lag for the Novatel GPS, but other than that the
 	    model is okay.
+
+Deal with sensor::data array ownership issues - the sensor objects probably
+shouldn't deallocate things.

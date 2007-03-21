@@ -29,10 +29,9 @@ namespace GPO {
 class AxelConstraint : public Sensor {
  public:
   // Create the sensor with the given wheel encoder measurements array, which
-  // must be allocated on the heap. This object DOES NOT take ownership of the
-  // array, i.e. this object will not delete it.
-  // The sensor noise standard deviation is noise_scale times the absolute
-  // value of the wheel velocity measurement at each timestep.
+  // must be allocated on the heap. The sensor noise standard deviation is
+  // noise_scale times the absolute value of the wheel velocity measurement at
+  // each timestep.
   AxelConstraint(int num_samples, WheelEncoder::Data *samples, double stepsize, double noise_scale);
 
   ~AxelConstraint();

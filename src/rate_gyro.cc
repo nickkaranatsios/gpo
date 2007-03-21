@@ -57,7 +57,6 @@ RateGyroSensor::RateGyroSensor(int num_samples, Data *samples, double stepsize,
 }
 
 RateGyroSensor::~RateGyroSensor() {
-  delete[] samples_;
 }
 
 void RateGyroSensor::SetSpin(double x, double y, double z) {
