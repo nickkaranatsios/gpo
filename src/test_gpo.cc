@@ -318,7 +318,10 @@ double test_hessian_helper(int B, int N, int M) {
 
   // Factor and solve
   memcpy(x, b, sz*sizeof(double));
-  H.Solve(x);
+  const char *error_message = H.Solve(x);
+  if (error_message) {
+    printf ("\tSolve error message: %s (*** BAD ***)\n", error_message);
+  }
 
   // Test solution
   Horig.Multiply(x, btest);

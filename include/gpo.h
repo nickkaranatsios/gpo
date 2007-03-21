@@ -25,7 +25,6 @@
 #include "gpo/gps_velocity.h"
 #include "gpo/accelerometer.h"
 #include "gpo/rate_gyro.h"
-#include "gpo/inertial.h"
 #include "gpo/axel.h"
 #include "gpo/wheel.h"
 #include "gpo/road.h"

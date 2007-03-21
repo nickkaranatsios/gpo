@@ -429,13 +429,15 @@ const char *HessianMatrix::Solve(double *vector) {
     for (int j = 0; j < N_; j++) {
       double value1 = DIAG(i)[(j*(j+3))/2];
       double value2 = VECTOR(i)[j];
-      double value3 = VECTOR(B_)[j];
       if (isinf(value1)) return "FP error: Infinity encountered (diag)";
       if (isinf(value2)) return "FP error: Infinity encountered (rhs vector)";
-      if (isinf(value3)) return "FP error: Infinity encountered (rhs vector end)";
       if (isnan(value1)) return "FP error: NaN encountered (diag)";
       if (isnan(value2)) return "FP error: NaN encountered (rhs vector)";
-      if (isnan(value3)) return "FP error: NaN encountered (rhs vector end)";
+    }
+    for (int j = 0; j < M_; j++) {
+      double value = VECTOR(B_)[j];
+      if (isinf(value)) return "FP error: Infinity encountered (rhs vector end)";
+      if (isnan(value)) return "FP error: NaN encountered (rhs vector end)";
     }
 #endif
   }
