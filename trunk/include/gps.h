@@ -38,8 +38,7 @@ class GPSSensor : public Sensor {
   };
 
   // Create the sensor with the given measurements array, which must be
-  // allocated on the heap. This object takes ownership of the array and will
-  // delete it when destroyed.
+  // allocated on the heap.
   GPSSensor(int num_samples, Data *samples);
 
   ~GPSSensor();

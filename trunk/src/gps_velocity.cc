@@ -36,7 +36,6 @@ GPSVelocitySensor::GPSVelocitySensor(int num_samples, Data *samples,
 }
 
 GPSVelocitySensor::~GPSVelocitySensor() {
-  delete[] samples_;
 }
 
 void GPSVelocitySensor::GetInfo(SensorInfo *info) {

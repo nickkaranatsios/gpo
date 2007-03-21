@@ -29,7 +29,6 @@ GPSSensor::GPSSensor(int num_samples, Data *samples) {
 }
 
 GPSSensor::~GPSSensor() {
-  delete[] samples_;
 }
 
 void GPSSensor::GetInfo(SensorInfo *info) {

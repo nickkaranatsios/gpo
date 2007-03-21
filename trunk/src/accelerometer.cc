@@ -53,7 +53,6 @@ AccelerometerSensor::AccelerometerSensor(int num_samples, Data *samples,
 }
 
 AccelerometerSensor::~AccelerometerSensor() {
-  delete[] samples_;
 }
 
 void AccelerometerSensor::SetGravity(double x, double y, double z) {
