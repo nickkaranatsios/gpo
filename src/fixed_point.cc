@@ -50,7 +50,18 @@ void FixedPoint::ComputeErrorVector(int i, const Number *prev_step,
   error[0] = (this_step[STATE_X] - pos_[0]) / std_pos_;
   error[1] = (this_step[STATE_Y] - pos_[1]) / std_pos_;
   error[2] = (this_step[STATE_Z] - pos_[2]) / std_pos_;
-  error[3] = (this_step[STATE_E1] - euler_[0]) / std_euler_;
-  error[4] = (this_step[STATE_E2] - euler_[1]) / std_euler_;
-  error[5] = (this_step[STATE_E3] - euler_[2]) / std_euler_;
+  
+  // Ensure that the Euler angle deltas are in the range -pi..pi.
+  double e[3];
+  for (int i=0; i < 3; i++) {
+    double x = to_double(this_step[STATE_E1 + i]);
+    double y = euler_[i];
+    while (y-x > M_PI) y -= 2.0 * M_PI;
+    while (y-x < -M_PI) y += 2.0 * M_PI;
+    e[i] = y;
+  }
+  
+  error[3] = (this_step[STATE_E1] - e[0]) / std_euler_;
+  error[4] = (this_step[STATE_E2] - e[1]) / std_euler_;
+  error[5] = (this_step[STATE_E3] - e[2]) / std_euler_;
 }
