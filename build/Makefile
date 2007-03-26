@@ -21,7 +21,7 @@ LIB=libgpo.a
 LIB_SRC=optimizer.cc hessian.cc fast_block.cc gps.cc gps_velocity.cc \
 	accelerometer.cc rate_gyro.cc axel.cc wheel.cc road.cc \
 	test_matrix.cc rotation.cc common.cc gravimetry.cc sensor.cc \
-	auto_diff.cc cache.cc
+	auto_diff.cc cache.cc fixed_point.cc
 APP_SRC=test_gpo.cc
 CONFIG_H=../include/config.h
 
