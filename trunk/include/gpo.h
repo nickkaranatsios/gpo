@@ -28,6 +28,7 @@
 #include "gpo/axel.h"
 #include "gpo/wheel.h"
 #include "gpo/road.h"
+#include "gpo/fixed_point.h"
 #include "gpo/rotation.h"
 #include "gpo/gravimetry.h"
 
