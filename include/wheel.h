@@ -34,9 +34,10 @@ class WheelEncoder : public Sensor {
     double wheel_velocity;
   };
 
-  // Create the sensor with the given measurements array, which must be
-  // allocated on the heap. The sensor noise standard deviation is noise_scale
-  // times the absolute value of the wheel velocity measurement at each timestep.
+  // Create the sensor with the given measurements array, which must be valid
+  // for the lifetime of this object. The sensor noise standard deviation is
+  // noise_scale times the absolute value of the wheel velocity measurement at
+  // each timestep.
   WheelEncoder(int num_samples, Data *samples, double stepsize,
     double noise_scale);
 

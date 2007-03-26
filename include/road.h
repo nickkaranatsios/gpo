@@ -29,9 +29,9 @@ namespace GPO {
 class RoadConstraint : public Sensor {
  public:
   // Create the sensor with the given wheel encoder measurements array, which
-  // must be allocated on the heap. The sensor noise standard deviation is
-  // noise_scale times the absolute value of the wheel velocity measurement at
-  // each timestep.
+  // must be valid for the lifetime of this object. The sensor noise standard
+  // deviation is noise_scale times the absolute value of the wheel velocity
+  // measurement at each timestep.
   RoadConstraint(int num_samples, WheelEncoder::Data *samples, double stepsize, double noise_scale);
 
   ~RoadConstraint();

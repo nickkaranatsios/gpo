@@ -41,9 +41,9 @@ class GPSVelocitySensor : public Sensor {
     double sx, sy, sz;
   };
 
-  // Create the sensor with the given measurements array, which must be
-  // allocated on the heap. If 'gps_position' is not 0 then the global GPS
-  // antenna center vector in the state vector will be shared with the
+  // Create the sensor with the given measurements array, which must be valid
+  // for the lifetime of this object. If 'gps_position' is not 0 then the global
+  // GPS antenna center vector in the state vector will be shared with the
   // GPS position sensor.
   GPSVelocitySensor(int num_samples, Data *samples, double stepsize,
                     GPSSensor *gps_position);
