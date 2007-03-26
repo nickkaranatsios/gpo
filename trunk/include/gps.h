@@ -37,8 +37,8 @@ class GPSSensor : public Sensor {
     double sx, sy, sz;
   };
 
-  // Create the sensor with the given measurements array, which must be
-  // allocated on the heap.
+  // Create the sensor with the given measurements array, which must be valid
+  // for the lifetime of this object.
   GPSSensor(int num_samples, Data *samples);
 
   ~GPSSensor();

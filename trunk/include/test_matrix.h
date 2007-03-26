@@ -95,7 +95,7 @@ class TestMatrix {
   double Distance(const TestMatrix &M);
 
  private:
-  int n_, m_;            // Matrix dimension (n rows, m columns)
+  int n_, m_;           // Matrix dimension (n rows, m columns)
   double *data_;        // n*m elements allocated on the heap
 };
 

@@ -35,9 +35,9 @@ class AccelerometerSensor : public Sensor {
     double std_dev;             // Noise standard deviation for ax,ay,az
   };
 
-  // Create the sensor with the given measurements array, which must be
-  // allocated on the heap. The samples[i] entry corresponds to time step i.
-  // The first entry of this array is ignored.
+  // Create the sensor with the given measurements array, which must be valid
+  // for the lifetime of this object. The samples[i] entry corresponds to time
+  // step i. The first entry of this array is ignored.
   // D is the drifting bias *per-step* noise standard deviation.
   AccelerometerSensor(int num_samples, Data *samples, double stepsize,
                       double D);
