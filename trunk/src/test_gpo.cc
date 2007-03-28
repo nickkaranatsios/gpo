@@ -649,6 +649,19 @@ void test_road_sensor() {
   test_sensor(sensor);
 }
 
+void test_fixed_point_sensor() {
+  printf("Running %s()\n", __FUNCTION__);
+
+  double pos[3], euler[3];
+  for (int i = 0; i < 3; i++) {
+    pos[i] = rand_real() - 0.5;
+    euler[i] = rand_real() - 0.5;
+  }
+
+  FixedPoint sensor(1, pos, euler, rand_real()+0.5, rand_real()+0.5);
+  test_sensor(sensor);
+}
+
 //***************************************************************************
 
 }; // anonymous namespace
@@ -671,6 +684,7 @@ int main(int argc, char **argv) {
   test_axel_sensor();
   test_wheel_sensor();
   test_road_sensor();
+  test_fixed_point_sensor();
 
   test_hessian();
 
