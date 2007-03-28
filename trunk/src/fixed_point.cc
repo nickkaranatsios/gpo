@@ -25,8 +25,8 @@ using namespace GPO;
 FixedPoint::FixedPoint(int index, double pos[3], double euler[3],
                        double std_pos, double std_euler) {
   index_ = index;
-  memcpy(pos_, pos, sizeof(pos));
-  memcpy(euler_, euler, sizeof(euler));
+  memcpy(pos_, pos, 3*sizeof(double));
+  memcpy(euler_, euler, 3*sizeof(double));
   std_pos_ = std_pos;
   std_euler_ = std_euler;
 }
