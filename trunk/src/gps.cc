@@ -26,13 +26,15 @@ GPSSensor::GPSSensor(int num_samples, Data *samples) {
   CHECK(num_samples > 0 && samples);
   num_samples_ = num_samples;
   samples_ = samples;
+  center_[0] = 0;
+  center_[1] = 0;
+  center_[2] = 0;
 }
 
 GPSSensor::~GPSSensor() {
 }
 
 void GPSSensor::GetInfo(SensorInfo *info) {
-  info->num_global_states = 3;          // Center of GPS relative to IMU
   info->num_measurements = num_samples_;
   info->error_size = 3;
 }
@@ -46,15 +48,16 @@ void GPSSensor::ComputeErrorVector(int i, const Number *prev_step,
   Number *error)
 {
   Number R[9];
-  const Number *center_gps = globals + GOffset();
   const Number *e = this_step + STATE_E1;
   eulerR(e, R);
-  FAST_MULTIPLY0_331(error, = , R, center_gps)
+  FAST_MULTIPLY0_331(error, = , R, center_)
   error[0] = (error[0] + this_step[STATE_X] - samples_[i].x) / samples_[i].sx;
   error[1] = (error[1] + this_step[STATE_Y] - samples_[i].y) / samples_[i].sy;
   error[2] = (error[2] + this_step[STATE_Z] - samples_[i].z) / samples_[i].sz;
 }
 
-int GPSSensor::GetAntennaCenterOffset() const {
-  return GOffset();
+void GPSSensor::SetAntennaCenterOffset(double x, double y, double z) {
+  center_[0] = x;
+  center_[1] = y;
+  center_[2] = z;
 }

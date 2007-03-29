@@ -542,6 +542,7 @@ void test_gps_sensor() {
     samples[i].sz = rand_real() + 10.0;
   }
   GPSSensor sensor(kNumSamples-2, samples);
+  sensor.SetAntennaCenterOffset(rand_real()-0.5, rand_real()-0.5, rand_real()-0.5);
 
   test_sensor(sensor);
 }
@@ -559,7 +560,8 @@ void test_gps_velocity_sensor() {
     samples[i].sy = rand_real() + 10.0;
     samples[i].sz = rand_real() + 10.0;
   }
-  GPSVelocitySensor sensor(kNumSamples-2, samples, 0.1*rand_real() + 0.1, 0);
+  GPSVelocitySensor sensor(kNumSamples-2, samples, 0.1*rand_real() + 0.1);
+  sensor.SetAntennaCenterOffset(rand_real()-0.5, rand_real()-0.5, rand_real()-0.5);
 
   test_sensor(sensor);
 }
