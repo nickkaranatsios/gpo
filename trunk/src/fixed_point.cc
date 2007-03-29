@@ -40,28 +40,29 @@ void FixedPoint::GetInfo(SensorInfo *info) {
 }
 
 int FixedPoint::MeasurementIndex(int i) {
-  return index_;
+  return (index_ > 0) ? index_ : 1;
 }
 
 void FixedPoint::ComputeErrorVector(int i, const Number *prev_step,
   const Number *this_step, const Number *next_step, const Number *globals,
   Number *error)
 {
-  error[0] = (this_step[STATE_X] - pos_[0]) / std_pos_;
-  error[1] = (this_step[STATE_Y] - pos_[1]) / std_pos_;
-  error[2] = (this_step[STATE_Z] - pos_[2]) / std_pos_;
-  
+  const Number *step = (index_ > 0) ? this_step : prev_step;
+  error[0] = (step[STATE_X] - pos_[0]) / std_pos_;
+  error[1] = (step[STATE_Y] - pos_[1]) / std_pos_;
+  error[2] = (step[STATE_Z] - pos_[2]) / std_pos_;
+
   // Ensure that the Euler angle deltas are in the range -pi..pi.
   double e[3];
   for (int i=0; i < 3; i++) {
-    double x = to_double(this_step[STATE_E1 + i]);
+    double x = to_double(step[STATE_E1 + i]);
     double y = euler_[i];
     while (y-x > M_PI) y -= 2.0 * M_PI;
     while (y-x < -M_PI) y += 2.0 * M_PI;
     e[i] = y;
   }
   
-  error[3] = (this_step[STATE_E1] - e[0]) / std_euler_;
-  error[4] = (this_step[STATE_E2] - e[1]) / std_euler_;
-  error[5] = (this_step[STATE_E3] - e[2]) / std_euler_;
+  error[3] = (step[STATE_E1] - e[0]) / std_euler_;
+  error[4] = (step[STATE_E2] - e[1]) / std_euler_;
+  error[5] = (step[STATE_E3] - e[2]) / std_euler_;
 }

@@ -658,7 +658,7 @@ void test_fixed_point_sensor() {
     euler[i] = rand_real() - 0.5;
   }
 
-  FixedPoint sensor(1, pos, euler, rand_real()+0.5, rand_real()+0.5);
+  FixedPoint sensor(0, pos, euler, rand_real()+0.5, rand_real()+0.5);
   test_sensor(sensor);
 }
 
