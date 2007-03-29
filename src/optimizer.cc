@@ -60,7 +60,7 @@ const char *PoseOptimizer::Optimize(double *state) {
   const double kMinLambda = 1e-20;      // Minimum value of lambda
   const double kScaleTol = 1e-6;        // Convergence tolerance (scale)
   const double kAbsTol = 1e-9;          // Convergence tolerance (absolute)
-  const int kMeasurementBlocks = 100;   // @@@TODO: Arbitrary
+  const int kMeasurementBlocks = 1000;  // @@@TODO: Arbitrary
 
   // Misc variables
   double *original_state = state;       // Because we swap state vectors
@@ -95,6 +95,7 @@ const char *PoseOptimizer::Optimize(double *state) {
   double lambda = kLambdaStart;
   double error = 0;             // Error at 'state'
   bool evaled_at_state = false; // True if Hessian, gradient currently evaluated at 'state'
+  int bad_counter = 0;          // Measures steps since the last bad factorization
   for (int iteration = 0; iteration < kMaxIter; iteration++) {
     // 'state' is the best known state, search for a better one.
 
@@ -127,8 +128,10 @@ const char *PoseOptimizer::Optimize(double *state) {
       }
       lambda *= kLambdaBigScale;
       evaled_at_state = false;
+      bad_counter = 4;
       continue;
     }
+    bad_counter--;
     GPO_LOG("GPO step %d: factored H+lambda*I successfully\n", iteration);
 
     // Compute the trial state
@@ -170,8 +173,11 @@ const char *PoseOptimizer::Optimize(double *state) {
       evaled_at_state = true;
       error = trial_error;
 
-      // Scale lambda for next time
-      lambda /= kLambdaScale;
+      // Scale lambda for next time, but only if we have not recently factored
+      // a bad matrix.
+      if (bad_counter <= 0) {
+        lambda /= kLambdaScale;
+      }
 
       // Don't make lambda *too* small, to protect against rank deficiency of H.
       // @@@TODO: Do we really need this??? - FP error catching should help here.
