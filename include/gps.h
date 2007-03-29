@@ -50,12 +50,13 @@ class GPSSensor : public Sensor {
     const Number *this_step, const Number *next_step, const Number *globals,
     Number *error);
 
-  // Return the position of the GPS antenna center vector in the state vector.
-  int GetAntennaCenterOffset() const;
+  // Set the position of the GPS antenna relative to the IMU measurement frame.
+  void SetAntennaCenterOffset(double x, double y, double z);
 
 private:
   int num_samples_;
   Data *samples_;
+  double center_[3];
 };
 
 }; // namespace GPO

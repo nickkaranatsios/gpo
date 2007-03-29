@@ -26,27 +26,21 @@ using namespace GPO;
 
 
 GPSVelocitySensor::GPSVelocitySensor(int num_samples, Data *samples,
-                                     double stepsize, GPSSensor *gps_position) {
+                                     double stepsize) {
   CHECK(num_samples > 0 && samples);
 
   num_samples_ = num_samples;
   samples_ = samples;
   stepsize_ = stepsize;
-  gps_position_ = gps_position;
+  center_[0] = 0;
+  center_[1] = 0;
+  center_[2] = 0;
 }
 
 GPSVelocitySensor::~GPSVelocitySensor() {
 }
 
 void GPSVelocitySensor::GetInfo(SensorInfo *info) {
-  // We need a global vector for the center of GPS relative to the IMU.
-  if (gps_position_) {
-    // Share the center vector between the GPS position and velocity sensors.
-    info->num_global_states = 0;
-  } else {
-    // Allocate our own vector.
-    info->num_global_states = 3;
-  }
   info->num_measurements = num_samples_;
   info->error_size = 3;
 }
@@ -60,8 +54,6 @@ void GPSVelocitySensor::ComputeErrorVector(int i, const Number *prev_step,
   Number *error)
 {
   Number R[9], w[3], dot_e[3], c[3];
-  int goffset = gps_position_ ? gps_position_->GOffset() : GOffset();
-  const Number *center_gps = globals + goffset;
   const Number *e = this_step + STATE_E1;
   // Compute a central difference approximation to de/dt
   for (int j = 0; j < 3; j++) {
@@ -69,9 +61,9 @@ void GPSVelocitySensor::ComputeErrorVector(int i, const Number *prev_step,
   }
   // Compute an approximation to the angular velocity.
   eulerEv(e, dot_e, w);
-  // Compute the center_gps vector in the world frame.
+  // Compute the center_ vector in the world frame.
   eulerR(e, R);
-  FAST_MULTIPLY0_331(c, = , R, center_gps);
+  FAST_MULTIPLY0_331(c, = , R, center_);
   // Compute the total velocity
   FAST_CROSS(error, = , w, c);
   for (int j = 0; j < 3; j++) {
@@ -84,4 +76,10 @@ void GPSVelocitySensor::ComputeErrorVector(int i, const Number *prev_step,
   error[0] /= samples_[i].sx;
   error[1] /= samples_[i].sy;
   error[2] /= samples_[i].sz;
+}
+
+void GPSVelocitySensor::SetAntennaCenterOffset(double x, double y, double z) {
+  center_[0] = x;
+  center_[1] = y;
+  center_[2] = z;
 }

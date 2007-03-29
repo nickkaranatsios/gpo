@@ -42,11 +42,8 @@ class GPSVelocitySensor : public Sensor {
   };
 
   // Create the sensor with the given measurements array, which must be valid
-  // for the lifetime of this object. If 'gps_position' is not 0 then the global
-  // GPS antenna center vector in the state vector will be shared with the
-  // GPS position sensor.
-  GPSVelocitySensor(int num_samples, Data *samples, double stepsize,
-                    GPSSensor *gps_position);
+  // for the lifetime of this object
+  GPSVelocitySensor(int num_samples, Data *samples, double stepsize);
 
   ~GPSVelocitySensor();
 
@@ -57,11 +54,14 @@ class GPSVelocitySensor : public Sensor {
     const Number *this_step, const Number *next_step, const Number *globals,
     Number *error);
 
+  // Set the position of the GPS antenna relative to the IMU measurement frame.
+  void SetAntennaCenterOffset(double x, double y, double z);
+
 private:
   int num_samples_;
   Data *samples_;
   double stepsize_;
-  GPSSensor *gps_position_;
+  double center_[3];
 };
 
 }; // namespace GPO
