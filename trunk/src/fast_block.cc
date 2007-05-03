@@ -236,6 +236,7 @@ void solveT(const double *L, double *B, int n) {
 
 void multiply1(double *A, double scale, const double *B, const double *C,
                int p, int q, int r) {
+  if (p == 0 || q == 0 || r == 0) return;
   CHECK(A != B && A != C);
   CHECK(A && B && C && p > 0 && q > 0 && r > 0);
   for (int i = 0; i < p; i++) {
@@ -254,6 +255,7 @@ void OPT_MULTIPLY2(double *A, double scale, const double *B, const double *C,
   //   * Use a 2x2 outer product to halve the number of loads
   //   * Unroll inner loops by 4.
   //   * Simplify index computations in inner loops.
+  if (p == 0 || q == 0 || r == 0) return;
   CHECK(A != B && A != C);
   int p2 = p&~1, r2 = r&~1;
   int i;
@@ -420,6 +422,7 @@ void OPT_MULTIPLY2_LT(double *A, double scale, const double *B, const double *C,
   //   * Use a 2x2 outer product to halve the number of loads
   //   * Unroll inner loops by 4.
   //   * Simplify index computations in inner loops.
+  if (p == 0 || q == 0) return;
   CHECK(A != B && A != C);
   int p2 = p&~1;
   int i;
@@ -616,6 +619,7 @@ void REF_SOLVE(const double *L, double *B, int n, int m) {
 
 void REF_MULTIPLY2(double *A, double scale, const double *B, const double *C,
                    int p, int q, int r) {
+  if (p == 0 || q == 0 || r == 0) return;
   CHECK(A != B && A != C);
   for (int i = 0; i < p; i++) {
     for (int j = 0; j < r; j++) {
@@ -629,6 +633,7 @@ void REF_MULTIPLY2(double *A, double scale, const double *B, const double *C,
 
 void REF_MULTIPLY2_LT(double *A, double scale, const double *B, const double *C,
                       int p, int q) {
+  if (p == 0 || q == 0) return;
   CHECK(A != B && A != C);
   for (int i = 0; i < p; i++) {
     for (int j = 0; j <= i; j++) {
