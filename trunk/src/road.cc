@@ -39,7 +39,7 @@ RoadConstraint::~RoadConstraint() {
 
 void RoadConstraint::SetRoadVector(Vector3_d &road) {
   memcpy(road_, road, sizeof(road));
-  // Normalize the load vector
+  // Normalize the road vector
   double length = sqrt(sqr(road_[0]) + sqr(road_[1]) + sqr(road_[2]));
   for (int i = 0; i < 3; i++) road_[i] /= length;
 }
