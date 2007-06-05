@@ -61,7 +61,10 @@ int has_header[NUM_HEADERS];
 /*
  * Stuff that goes before all #includes
  */
-char *pre_include = "#define _LARGEFILE64_SOURCE\t\t// To access lseek64() on some systems\n";
+char *pre_include =
+  "#ifndef _LARGEFILE64_SOURCE\n"
+  "#define _LARGEFILE64_SOURCE\t\t// To access lseek64() on some systems\n"
+  "#endif\n";
 
 /***************************************************************************/
 /* Utility functions */
