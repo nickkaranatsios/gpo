@@ -1,0 +1,3 @@
+The Google pose optimizer (GPO) is a C++ library that allows reconstruction of the pose of a sensor platform (i.e. its position and orientation over time) based on information from sensors such as GPS, accelerometers and rate gyroscopes. GPO does not provide real-time localization in the way that a Kalman filter would, instead it generates the pose as a result of a large off-line optimization. This produces better results.
+
+See the [Wiki](http://code.google.com/p/gpo/wiki/GPO) for more information.
